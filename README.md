@@ -208,11 +208,3 @@ fourmeme create-instant
 ```
 
 * Deploys optimized token to **BNB Chain**
-
----
-
-If you want, I can also turn this into:
-
-* a **hackathon submission page**
-* a **Notion doc**
-* or a **pitch deck (PPT)**
