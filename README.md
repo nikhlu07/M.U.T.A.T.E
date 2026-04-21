@@ -30,6 +30,38 @@ Current AI agent deployments in decentralized finance rely heavily on historical
 
 M.U.T.A.T.E. resolves these issues by **decoupling economic optimization from cultural evolution** and replacing testnets with a **high-fidelity synthetic market** powered by LLMs.
 
+### 🏛️ High-Level System Flow
+
+```mermaid
+graph TD
+    subgraph Market_Simulation [Market Simulation]
+        A[Synthetic Exchange] <--> B(15,000+ AI Agents)
+        B -->|"Trading Behavior"| A
+    end
+    
+    subgraph Evolution_Engine [Evolution Engine]
+        C["Economic Optimizer (CMA-ES)"]
+        D["Cultural Evolver (Gemma 4 + Slerp)"]
+    end
+    
+    subgraph Core_System [Core System]
+        E[M.U.T.A.T.E Core]
+        E -->|"Deploys Tokens"| A
+        A -->|"Market Signals"| F[Fitness Evaluator]
+        F -->|"Hybrid Score"| E
+        E --> C
+        E --> D
+    end
+
+    subgraph Output
+        G[Real-time D3.js Dashboard]
+        H[BNB Chain via Four.Meme SDK]
+    end
+    
+    E -.-> G
+    E -->|"If Target Score Reached"| H
+```
+
 ---
 
 ### 1. The Synthetic Market Swarm (Environment)
@@ -65,6 +97,21 @@ The system evaluates tokens using a **Hybrid Score** based on:
 ---
 
 ### 3. Dual-Engine Evolution
+
+```mermaid
+flowchart LR
+    A[Initial Token Seed] --> B{Dual Evolution}
+    B -->|"Traits/Narrative"| C[🎨 Cultural Evolution]
+    B -->|"Tokenomics/Supply"| D[🧮 Economic Optimization]
+    
+    C -->|"Gemma 4 Multimodal"| E(Semantic Crossover via Slerp)
+    D -->|"CMA-ES"| F(Bonding Curve & Margin Correction)
+    
+    E --> G[Next Gen Token]
+    F --> G
+    
+    G --> H[Deploy to Synthetic Market]
+```
 
 #### 🧮 Economic Optimization (CMA-ES)
 
@@ -198,6 +245,24 @@ Watch your AI swarm evolve memecoins in real time.
 ---
 
 ### 5. Mainnet Graduation
+
+```mermaid
+sequenceDiagram
+    participant S as M.U.T.A.T.E. Engine
+    participant D as D3.js Dashboard
+    participant H as Human Operator
+    participant F as Four.Meme SDK
+    participant B as BNB Chain
+    
+    S->>S: Evaluates Generation Hybrid Score
+    S->>D: Triggers Graduation Alert
+    D-->>H: Prompts for Manual Approval
+    H->>D: Approves Deployment
+    D->>F: POST /meme-api/v1/public/user/login
+    F->>F: fourmeme create-instant & register
+    F->>B: Deploys Token to Mainnet
+    B-->>S: Confirms Live Mainnet Deployment
+```
 
 * System pauses when a token reaches target **Hybrid Score**
 * Requires **human approval via dashboard**
