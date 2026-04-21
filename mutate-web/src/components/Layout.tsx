@@ -19,10 +19,11 @@ export const Layout = () => {
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-infrared/50 to-transparent" />
         <div className="mx-auto max-w-[1440px] px-6 py-4 flex items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-5 h-5 flex items-center justify-center relative border border-ink/20 group-hover:border-infrared transition-colors duration-500 overflow-hidden">
-              <div className="absolute inset-0 bg-infrared/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
-              <div className="w-1.5 h-1.5 bg-ink group-hover:bg-infrared transition-colors duration-300 relative z-10" />
-            </div>
+            <img
+              src="/mutate-logo.png"
+              alt="M.U.T.A.T.E. Logo"
+              className="w-7 h-7 object-contain group-hover:drop-shadow-[0_0_8px_rgba(255,68,0,0.6)] transition-all duration-500"
+            />
             <span className="font-display text-xl tracking-widest font-bold uppercase bg-gradient-to-r from-ink to-ink/70 bg-clip-text text-transparent group-hover:text-ink transition-colors duration-300">
               M.U.T.A.T.E.
             </span>
