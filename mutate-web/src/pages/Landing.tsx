@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { VaultCard } from "@/components/VaultCard";
 import { StatusDot } from "@/components/StatusDot";
 import { heroData } from "@/data/mockData";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2, Dna, Square } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useEvolution } from "@/hooks/useEvolution";
+import { isGeminiAvailable } from "@/lib/gemini";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 
@@ -143,6 +145,162 @@ const EvolutionMatrix = () => {
   );
 };
 
+const EvolutionDemo = () => {
+  const evo = useEvolution({ maxGenerations: 3, populationSize: 4 });
+  const geminiReady = isGeminiAvailable();
+
+  return (
+    <div className="mt-16 pt-16 border-t border-ink/10 relative">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-infrared/30 to-transparent" />
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 className="font-display font-bold uppercase text-6xl text-ink">LIVE AI EVOLUTION</h2>
+          <div className="flex gap-3 mt-3">
+            <span className="bg-ink/10 text-ink px-3 py-1 text-[10px] font-mono uppercase tracking-widest">GEMMA 4 31B-IT</span>
+            <span className="bg-ink/10 text-ink px-3 py-1 text-[10px] font-mono uppercase tracking-widest">GOOGLE AI STUDIO</span>
+            <span className={`px-3 py-1 text-[10px] font-mono uppercase tracking-widest border ${geminiReady ? 'border-success-gold/30 bg-success-gold/10 text-success-gold' : 'border-infrared/30 bg-infrared/10 text-infrared'}`}>
+              {geminiReady ? 'API KEY: SET' : 'MOCK MODE'}
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={evo.startEvolution}
+            disabled={evo.isEvolving}
+            className="btn-primary flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {evo.isEvolving ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> EVOLVING GEN {evo.generation}...</>
+            ) : (
+              <><Dna className="w-4 h-4" /> RUN EVOLUTION DEMO</>
+            )}
+          </button>
+          {evo.isEvolving && (
+            <button onClick={evo.stopEvolution} className="btn-secondary flex items-center gap-2">
+              <Square className="w-4 h-4" /> ABORT
+            </button>
+          )}
+          {evo.completed && (
+            <button onClick={evo.reset} className="btn-secondary">RESET</button>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left: Live Stats */}
+        <div className="lg:col-span-4 space-y-4">
+          <VaultCard label="EVOLUTION STATUS">
+            <div className="space-y-4">
+              <div className="flex justify-between font-mono text-[12px] uppercase tracking-widest">
+                <span className="text-graphite">GENERATION</span>
+                <span className="text-ink font-bold">{evo.generation} / {evo.config.maxGenerations}</span>
+              </div>
+              <div className="flex justify-between font-mono text-[12px] uppercase tracking-widest">
+                <span className="text-graphite">BEST FITNESS</span>
+                <span className="text-infrared font-bold">{evo.bestFitness.toFixed(3)}</span>
+              </div>
+              <div className="flex justify-between font-mono text-[12px] uppercase tracking-widest">
+                <span className="text-graphite">PHASE</span>
+                <span className="text-ink font-bold text-right">{evo.phase}</span>
+              </div>
+              <div className="flex justify-between font-mono text-[12px] uppercase tracking-widest">
+                <span className="text-graphite">POPULATION</span>
+                <span className="text-ink font-bold">{evo.population.length}</span>
+              </div>
+              {/* Progress bar */}
+              <div className="w-full h-[3px] bg-ink/10 relative overflow-hidden">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-infrared transition-all duration-500"
+                  style={{ width: `${(evo.generation / evo.config.maxGenerations) * 100}%` }}
+                />
+              </div>
+            </div>
+          </VaultCard>
+
+          {evo.bestToken && (
+            <VaultCard label="BEST TOKEN" accentColor="aave-purple">
+              <div className="font-display font-bold uppercase text-[24px] text-ink mb-2">
+                {evo.bestToken.genome.name}
+              </div>
+              <div className="font-mono text-[11px] text-aave-purple mb-3">${evo.bestToken.genome.symbol}</div>
+              <p className="font-mono text-[11px] text-ink/60 italic mb-4">"{evo.bestToken.genome.narrative}"</p>
+              <div className="space-y-2">
+                <div className="flex justify-between font-mono text-[10px] uppercase tracking-widest border-b border-ink/10 pb-1">
+                  <span className="text-graphite">FITNESS</span>
+                  <span className="text-infrared font-bold">{evo.bestToken.fitness.toFixed(3)}</span>
+                </div>
+                <div className="flex justify-between font-mono text-[10px] uppercase tracking-widest border-b border-ink/10 pb-1">
+                  <span className="text-graphite">VIBE</span>
+                  <span className="text-ink">{evo.bestToken.genome.vibe}</span>
+                </div>
+                <div className="flex justify-between font-mono text-[10px] uppercase tracking-widest">
+                  <span className="text-graphite">GENERATION</span>
+                  <span className="text-ink">{evo.bestToken.generation}</span>
+                </div>
+              </div>
+            </VaultCard>
+          )}
+        </div>
+
+        {/* Right: Audit Log */}
+        <div className="lg:col-span-8">
+          <VaultCard label="EVOLUTION AUDIT LOG // REAL-TIME" className="h-full">
+            <div className="font-mono text-[10px] uppercase tracking-wider space-y-1 max-h-[400px] overflow-y-auto">
+              {evo.logs.length === 0 ? (
+                <p className="text-ink/30 py-8 text-center text-[12px]">PRESS "RUN EVOLUTION DEMO" TO BEGIN AI-DRIVEN EVOLUTION</p>
+              ) : (
+                evo.logs.map((log, i) => (
+                  <div 
+                    key={i} 
+                    className={`py-1.5 px-3 border-l-2 ${
+                      i === 0 ? 'text-infrared font-bold border-infrared bg-infrared/5' :
+                      log.includes('BEST TOKEN') ? 'text-aave-purple border-aave-purple/50' :
+                      log.includes('SLERP') ? 'text-ink/70 border-aave-purple/30' :
+                      log.includes('ERROR') ? 'text-[hsl(354,96%,43%)] border-[hsl(354,96%,43%)]' :
+                      'text-ink/50 border-ink/10'
+                    }`}
+                  >
+                    {'>'} {log}
+                  </div>
+                ))
+              )}
+            </div>
+          </VaultCard>
+        </div>
+      </div>
+
+      {/* Population Grid */}
+      {evo.population.length > 0 && (
+        <div className="mt-6">
+          <VaultCard label={`POPULATION // GEN ${evo.generation}`}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {evo.population.map((t, i) => (
+                <div key={i} className={`border p-4 font-mono text-[11px] uppercase tracking-widest space-y-2 transition-all ${
+                  i === 0 ? 'border-infrared/30 bg-infrared/5' : 'border-ink/10 bg-canvas/60'
+                }`}>
+                  <div className="flex justify-between">
+                    <span className="font-bold text-ink truncate">{t.genome.name}</span>
+                    <span className="text-infrared font-bold">{t.fitness.toFixed(3)}</span>
+                  </div>
+                  <div className="text-ink/40 truncate">{t.genome.narrative}</div>
+                  {t.swarmSentiment && (
+                    <div className={`text-[9px] ${
+                      t.swarmSentiment.overallBias === 'BULLISH' ? 'text-success-gold' :
+                      t.swarmSentiment.overallBias === 'BEARISH' ? 'text-infrared' : 'text-ink/40'
+                    }`}>
+                      SWARM: {t.swarmSentiment.overallBias} // BUY: {(t.swarmSentiment.buyPressure * 100).toFixed(0)}%
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </VaultCard>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Landing = () => {
   const { activeAgents, generation, bestFitness, targetFitness, populationSize, topPerformer, agentBreakdown } = heroData;
   return (
@@ -209,12 +367,15 @@ const Landing = () => {
             </div>
           </div>
 
-          <div className="w-full relative z-20">
-            <Link to="/evolution" className="w-full bg-infrared hover:bg-ink text-canvas font-ui font-black uppercase text-[18px] py-6 tracking-[0.2em] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_0_40px_rgba(255,0,0,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+          <div className="w-full relative z-20 flex gap-4">
+            <Link to="/evolution" className="flex-1 bg-infrared hover:bg-ink text-canvas font-ui font-black uppercase text-[18px] py-6 tracking-[0.2em] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_0_40px_rgba(255,0,0,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
               INITIATE EVOLUTION MONITOR <ArrowRight className="w-6 h-6" />
             </Link>
           </div>
         </div>
+
+        {/* AI EVOLUTION DEMO */}
+        <EvolutionDemo />
 
         {/* 30% control panel */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">

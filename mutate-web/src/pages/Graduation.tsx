@@ -6,6 +6,8 @@ import { useFourMemeDeploy, type DeployStage } from "@/lib/web3/useFourMemeDeplo
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { generateCulturalToken } from "@/lib/dgrid";
+import { generateTokenLore } from "@/lib/tokenBreeder";
+import { isGeminiAvailable } from "@/lib/gemini";
 
 const STEPS = [
   "Engine Evaluation",
@@ -31,6 +33,7 @@ const Graduation = () => {
   const [graduated, setGraduated] = useState(false);
   const [generatingCulture, setGeneratingCulture] = useState(false);
   const [tokenData, setTokenData] = useState<{name: string, symbol: string, description: string} | null>(null);
+  const [tokenLore, setTokenLore] = useState<string | null>(null);
   
   const [sweep, setSweep] = useState(false);
   const {
@@ -88,9 +91,23 @@ const Graduation = () => {
   const triggerGraduation = async () => {
      setGraduated(true);
      setGeneratingCulture(true);
-     // Simulate DGrid API Gemma prompt
+     setTokenLore(null);
+     // Generate cultural token via Gemma 4 31B-IT
      const data = await generateCulturalToken();
      setTokenData(data);
+     // Generate AI lore for the graduated token
+     try {
+       const lore = await generateTokenLore({
+         name: data.name,
+         symbol: data.symbol,
+         narrative: data.description,
+         vibe: "Evolved · Battle-tested · Viral",
+         logoSeed: "0xGRAD...FINAL",
+       });
+       setTokenLore(lore);
+     } catch {
+       setTokenLore(null);
+     }
      setGeneratingCulture(false);
   }
 
@@ -138,10 +155,10 @@ const Graduation = () => {
             <Loader2 className="w-12 h-12 text-aave-purple animate-spin mb-6" />
             <p className="font-mono text-[14px] text-aave-purple uppercase tracking-widest flash-dot flex items-center gap-3">
                <Sparkles className="w-4 h-4" />
-               DGRID // GEMMA AI SYNTHESIZING CULTURE...
+               GEMMA 4 31B-IT // SYNTHESIZING CULTURE...
             </p>
             <p className="font-mono text-[10px] text-ink/40 mt-4 uppercase max-w-md mx-auto">
-               Extracting narrative hooks via hardware-anchored P2P endpoints... Generating ticker... Structuring JSON lore...
+               Google AI Studio → Cultural crossover + narrative generation + lore synthesis...
             </p>
           </div>
         ) : isSuccess ? (
@@ -152,6 +169,15 @@ const Graduation = () => {
             </div>
             <p className="font-mono mt-2 text-ink uppercase">${tokenData?.symbol}</p>
             <p className="font-mono mt-4 text-[10px] text-ink/60 uppercase max-w-md mx-auto italic">"{tokenData?.description}"</p>
+            {tokenLore && (
+              <div className="mt-4 max-w-lg mx-auto border border-aave-purple/20 bg-aave-purple/5 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-3 h-3 text-aave-purple" />
+                  <span className="font-mono text-[9px] text-aave-purple uppercase tracking-widest">AI-GENERATED LORE // GEMMA 4</span>
+                </div>
+                <p className="font-mono text-[11px] text-ink/70 leading-relaxed">{tokenLore}</p>
+              </div>
+            )}
             <p className="mono mt-6 text-graphite">FITNESS: 0.912 · GENERATION: 47 · STATUS: LIVE</p>
 
             {result && (
@@ -243,8 +269,21 @@ const Graduation = () => {
                 <div className="font-display font-bold uppercase text-[28px] text-aave-purple">
                   <ScrambleText value={tokenData?.name || "ERROR"} />
                 </div>
+                <p className="font-mono text-[12px] text-ink/60 mt-1">${tokenData?.symbol}</p>
                 <p className="mono mt-3">FITNESS</p>
                 <div className="display text-[40px]">0.912</div>
+                {tokenData?.description && (
+                  <p className="font-mono text-[10px] text-ink/50 mt-3 italic leading-relaxed">"{tokenData.description}"</p>
+                )}
+                {tokenLore && (
+                  <div className="mt-4 border border-aave-purple/20 bg-aave-purple/5 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-3 h-3 text-aave-purple" />
+                      <span className="font-mono text-[9px] text-aave-purple uppercase tracking-widest">AI-GENERATED LORE // GEMMA 4</span>
+                    </div>
+                    <p className="font-mono text-[10px] text-ink/70 leading-relaxed">{tokenLore}</p>
+                  </div>
+                )}
               </div>
               <div className="border border-ink p-5 font-mono text-[12px] uppercase tracking-[0.08em] space-y-2">
                 <div className="flex justify-between border-b border-ink/10 pb-1"><span className="text-graphite">GENERATION</span><span>47</span></div>
