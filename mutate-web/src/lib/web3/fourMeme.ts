@@ -1,0 +1,166 @@
+import { parseAbiItem, type Hex, type Address } from "viem";
+
+// Four.Meme Factory / TokenManager on BSC mainnet
+export const FACTORY_ADDRESS = "0x5c952063c7fc8610FFDB798152D69F0B9550762b" as Address;
+export const WBNB_ADDRESS = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c" as Address;
+
+// ABI for the on-chain createToken function
+export const FACTORY_ABI = [
+  parseAbiItem("function createToken(bytes memory args, bytes memory signature) payable"),
+] as const;
+
+// Four.Meme backend API
+const API_BASE = "https://four.meme/meme-api/v1";
+
+// ─── Types ──────────────────────────────────────────────────────────────────
+
+export interface TokenConfig {
+  name: string;
+  symbol: string;
+  description: string;
+  imageUrl: string;
+  twitter?: string;
+  telegram?: string;
+  website?: string;
+}
+
+interface ApiResponse<T = string> {
+  code: number;
+  msg: string;
+  data: T;
+}
+
+export interface CreateTokenData {
+  bamount: string;
+  createArg: Hex;
+  launchTime: number;
+  saleAmount: string;
+  serverTime: number;
+  signature: Hex;
+  tamount: string;
+  template: number;
+  tokenId: number;
+  totalAmount: string;
+}
+
+// ─── Step 1: Authenticate with Four.Meme ────────────────────────────────────
+
+/** Get a nonce to sign from the Four.Meme API */
+export async function getNonce(address: string): Promise<string> {
+  const res = await fetch(`${API_BASE}/private/user/nonce/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      accountAddress: address,
+      networkCode: "BSC",
+      verifyType: "LOGIN",
+    }),
+  });
+  const json: ApiResponse = await res.json();
+  if (json.code !== 0) throw new Error(`Nonce error: ${json.msg}`);
+  return json.data;
+}
+
+/** Verify the signed nonce and get an access token */
+export async function verifySignature(
+  address: string,
+  signature: Hex
+): Promise<string> {
+  const res = await fetch(`${API_BASE}/private/user/login/dex`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      inviteCode: "",
+      langType: "EN",
+      loginIp: "",
+      region: "WEB",
+      verifyInfo: {
+        address,
+        networkCode: "BSC",
+        signature,
+        verifyType: "LOGIN",
+      },
+      walletName: "MetaMask",
+    }),
+  });
+  const json: ApiResponse = await res.json();
+  if (json.code !== 0) throw new Error(`Verify error: ${json.msg}`);
+  return json.data; // access token
+}
+
+// ─── Step 2: Upload token image ─────────────────────────────────────────────
+
+export async function uploadTokenImage(
+  imageFile: File,
+  accessToken: string
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", imageFile);
+
+  const res = await fetch(`${API_BASE}/private/token/upload`, {
+    method: "POST",
+    headers: { "Meme-Web-Access": accessToken },
+    body: formData,
+  });
+  const json: ApiResponse = await res.json();
+  if (json.code !== 0) throw new Error(`Upload error: ${json.msg}`);
+  return json.data; // image URL
+}
+
+// ─── Step 3: Get createToken data from API ──────────────────────────────────
+
+export async function getCreateTokenData(
+  config: TokenConfig,
+  accessToken: string
+): Promise<CreateTokenData> {
+  const payload = {
+    clickFun: false,
+    desc: config.description,
+    funGroup: false,
+    imgUrl: config.imageUrl,
+    label: "Meme",
+    launchTime: Date.now(),
+    lpTradingFee: 0.0025,
+    name: config.name,
+    preSale: 0,
+    raisedAmount: 24,
+    raisedToken: {
+      b0Amount: "8",
+      buyFee: "0.01",
+      buyTokenLink: "https://pancakeswap.finance/swap",
+      deployCost: "0",
+      logoUrl: "https://static.four.meme/market/68b871b6-96f7-408c-b8d0-388d804b34275092658264263839640.png",
+      minTradeFee: "0",
+      nativeSymbol: "BNB",
+      networkCode: "BSC",
+      platform: "MEME",
+      reservedNumber: 10,
+      saleRate: "0.8",
+      sellFee: "0.01",
+      status: "PUBLISH",
+      symbol: "BNB",
+      symbolAddress: WBNB_ADDRESS,
+      totalAmount: "1000000000",
+      totalBAmount: "24",
+      tradeLevel: ["0.1", "0.5", "1"],
+    },
+    reserveRate: 0,
+    saleRate: 0.8,
+    shortName: config.symbol,
+    symbol: "BNB",
+    totalSupply: 1000000000,
+    twitterUrl: config.twitter || "",
+  };
+
+  const res = await fetch(`${API_BASE}/private/token/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Meme-Web-Access": accessToken,
+    },
+    body: JSON.stringify(payload),
+  });
+  const json: ApiResponse<CreateTokenData> = await res.json();
+  if (json.code !== 0) throw new Error(`Create error: ${json.msg}`);
+  return json.data;
+}

@@ -3,6 +3,7 @@ import { LinearPacer } from "@/components/LinearPacer";
 import { ForceGraph } from "@/visualizations/ForceGraph";
 import { CandlestickChart } from "@/visualizations/CandlestickChart";
 import { OrderBookDepth } from "@/visualizations/OrderBookDepth";
+import { ShieldCheck, Cpu, KeyRound } from "lucide-react";
 
 const dimensions = [
   { name: "Loss Aversion", value: 0.62, range: "0.5 — 3.0" },
@@ -33,6 +34,42 @@ const Swarm = () => (
               </div>
             ))}
           </div>
+        </VaultCard>
+        
+        {/* Pieverse TEE Integration Panel */}
+        <VaultCard label="PIEVERSE PURRFECT CLAW // TEE ENCLAVES" accentColor="success-gold">
+           <div className="space-y-4 font-mono text-[11px] uppercase tracking-widest text-ink/80">
+              <p className="text-success-gold border-b border-success-gold/20 pb-2 mb-4">HARDWARE-ANCHORED WALLET ISOLATION ACTIVE.</p>
+              
+              <div className="flex items-center justify-between border border-ink/10 bg-canvas/80 p-3">
+                 <div className="flex items-center gap-3">
+                    <ShieldCheck className="w-4 h-4 text-success-gold" />
+                    <span>TEE ATTESTATION</span>
+                 </div>
+                 <span className="text-success-gold font-bold">VERIFIED_SGX</span>
+              </div>
+              
+              <div className="flex items-center justify-between border border-ink/10 bg-canvas/80 p-3">
+                 <div className="flex items-center gap-3">
+                    <Cpu className="w-4 h-4 text-ink" />
+                    <span>PROTOCOL</span>
+                 </div>
+                 <span className="text-ink font-bold">x402b GASLESS</span>
+              </div>
+              
+              <div className="flex items-center justify-between border border-ink/10 bg-canvas/80 p-3">
+                 <div className="flex items-center gap-3">
+                    <KeyRound className="w-4 h-4 text-ink" />
+                    <span>ERC-8004 IDENTITY</span>
+                 </div>
+                 <span className="text-ink font-bold">P_CLAW_NFT_BOUND</span>
+              </div>
+              
+              <div className="flex justify-between items-center text-[9px] text-ink/50 pt-2">
+                 <span>15,247 KEYPAIRS ISOLATED</span>
+                 <span>LATENCY: 4MS</span>
+              </div>
+           </div>
         </VaultCard>
       </div>
 

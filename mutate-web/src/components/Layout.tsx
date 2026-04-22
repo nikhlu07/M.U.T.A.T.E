@@ -1,6 +1,7 @@
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { AuditLog } from "./AuditLog";
 import { AnimatePresence, motion } from "framer-motion";
+import { WalletButton } from "./WalletButton";
 
 const NAV = [
   { to: "/", label: "OVERVIEW", end: true },
@@ -60,17 +61,8 @@ export const Layout = () => {
             ))}
           </nav>
           
-          <div className="hidden lg:flex items-center gap-4 font-mono uppercase tracking-widest">
-            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3 border border-ink/10 px-4 py-2 bg-canvas/80 backdrop-blur-sm shadow-sm transition-all hover:border-ink/30 relative overflow-hidden cursor-default">
-              <div className="absolute top-0 left-0 w-1 h-full bg-infrared animate-pulse" />
-              <span className="text-[9px] text-ink/60 relative z-10">AGENT //</span>
-              <span className="text-ink font-bold text-[10px] relative z-10">AUTONOMOUS</span>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3 border border-ink/10 px-4 py-2 bg-canvas/80 backdrop-blur-sm shadow-sm transition-all hover:border-ink/30 relative overflow-hidden cursor-default">
-              <div className="absolute top-0 left-0 w-1 h-full bg-[#facc15] animate-pulse" />
-              <span className="text-[9px] text-ink/60 relative z-10">ORACLE //</span>
-              <span className="text-ink font-bold text-[10px] relative z-10">SYNCED</span>
-            </motion.div>
+          <div className="hidden md:flex items-center">
+            <WalletButton />
           </div>
         </div>
       </header>
