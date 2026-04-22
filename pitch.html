@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M.U.T.A.T.E. - Pitch Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@400;700&family=Oswald:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --absolute-white: #000000;
+            --optical-ash: #0d0d0f;
+            --vantablack: #ffffff;
+            --graphite: #8f8f94;
+            --infrared: #ff1a1a;
+            --aave-purple: #ba55d3;
+            --success-gold: #ffcc00;
+            --font-display: "Oswald", sans-serif;
+            --font-ui: "Inter", sans-serif;
+            --font-mono: "IBM Plex Mono", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            border-radius: 0 !important;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-ui);
+            background-color: var(--absolute-white);
+            color: var(--vantablack);
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            scroll-snap-align: start;
+            padding: 4rem;
+            position: relative;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        /* Tactical Header/Hero Text */
+        h1, h2 {
+            font-family: var(--font-display);
+            text-transform: uppercase;
+            font-weight: 900;
+            margin: 0;
+            line-height: 1;
+        }
+
+        h1 {
+            font-size: 6rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: var(--graphite);
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .mono {
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 11px;
+            color: var(--graphite);
+        }
+
+        .vault {
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.02);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .vault::before, .vault::after,
+        .vault > .crosshair-bl, .vault > .crosshair-br {
+            content: "+";
+            font-family: var(--font-mono);
+            color: var(--graphite);
+            font-size: 12px;
+            line-height: 1;
+            position: absolute;
+            pointer-events: none;
+        }
+        .vault::before { top: -6px; left: -6px; }
+        .vault::after  { top: -6px; right: -6px; }
+        .vault > .crosshair-bl { bottom: -6px; left: -6px; }
+        .vault > .crosshair-br { bottom: -6px; right: -6px; }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+        .stat-box {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .stat-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--infrared);
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--vantablack);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--graphite);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            font-family: var(--font-mono);
+            color: var(--graphite);
+            font-size: 12px;
+            letter-spacing: 0.2em;
+        }
+
+        .system-status {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--graphite);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dot {
+            width: 8px; height: 8px;
+            background: var(--infrared);
+            border-radius: 50% !important;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; box-shadow: 0 0 10px var(--infrared); }
+            50% { opacity: 0.3; box-shadow: none; }
+            100% { opacity: 1; box-shadow: 0 0 10px var(--infrared); }
+        }
+
+        .text-infrared { color: var(--infrared); }
+        .text-aave { color: var(--aave-purple); }
+        .text-gold { color: var(--success-gold); }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+            height: 60px;
+            margin-top: 10px;
+        }
+        .bar {
+            flex: 1;
+            background: var(--infrared);
+            opacity: 0.7;
+            transition: height 0.5s;
+        }
+        .bar:hover { opacity: 1; }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 0.5rem;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--infrared);
+            position: absolute;
+            top: 0; left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: INTRO -->
+<section class="slide" id="slide1">
+    <div class="system-status"><div class="dot"></div> SYSTEM.STATUS // ONLINE</div>
+    <div style="text-align: left; max-width: 1200px; width: 100%;">
+        <div class="mono" style="margin-bottom: 1rem; color: var(--infrared);">EVOLUTIONARY MEMECOIN ENGINE //</div>
+        <h1>M.U.T.A.T.E.</h1>
+        <h3 class="mono" style="font-size: 1.5rem; color: var(--vantablack); margin-top: 0; margin-bottom: 2rem;">MULTI-AGENT UNSUPERVISED TOKEN ADAPTATION AND TRAIT EVOLUTION</h3>
+        <p style="font-size: 1.5rem;">Autonomous A/B Testing and Evolution for Digital Culture & Tokenomics.</p>
+        
+        <div class="grid grid-3" style="margin-top: 4rem;">
+            <div class="stat-box">
+                <div class="stat-value">15,000+</div>
+                <div class="stat-label">AI Agents Deployed</div>
+            </div>
+            <div class="stat-box" style="--infrared: var(--aave-purple);">
+                <div class="stat-value">31B</div>
+                <div class="stat-label">Gemma 4 IT Params</div>
+            </div>
+            <div class="stat-box" style="--infrared: var(--success-gold);">
+                <div class="stat-value">BNB</div>
+                <div class="stat-label">Target Chain</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">01 // 09</div>
+</section>
+
+<!-- SLIDE 2: PROBLEM -->
+<section class="slide" id="slide2">
+    <div class="system-status"><div class="dot"></div> DIAGNOSTIC // DATA WALL DETECTED</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>THE "DATA WALL"</h2>
+        <p>Current AI agent deployments rely on historical data or human intuition, hitting a "data wall" when generating novel cultural artifacts.</p>
+        
+        <div class="grid grid-3 vault">
+            <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+            <div>
+                <h3 class="mono text-infrared">01 // THE TESTNET PARADOX</h3>
+                <p style="font-size: 1rem;">Optimizing tokens with valueless testnet currency appeals to bots, not real economic conditions. Market feedback is synthetic.</p>
+            </div>
+            <div>
+                <h3 class="mono text-infrared">02 // LOW FIDELITY</h3>
+                <p style="font-size: 1rem;">High-fidelity simulations rely on simplistic agents incapable of understanding narrative or culture.</p>
+            </div>
+            <div>
+                <h3 class="mono text-infrared">03 // VECTORIZING CULTURE</h3>
+                <p style="font-size: 1rem;">Cultural resonance is discrete and semantic. Gradient descent cannot optimize for meme virality.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">02 // 09</div>
+</section>
+
+<!-- SLIDE 3: SOLUTION -->
+<section class="slide" id="slide3">
+    <div class="system-status"><div class="dot"></div> PROTOCOL // HIGH-FIDELITY EVOLUTION</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>SYNTHETIC MARKET</h2>
+        <p>Decoupling economic optimization from cultural evolution via a <span class="text-infrared">high-fidelity synthetic market</span> powered by LLMs.</p>
+
+        <div class="grid grid-2" style="margin-top: 3rem;">
+            <div class="stat-box" style="padding: 3rem;">
+                <h3 class="mono" style="font-size: 1.2rem; color: var(--vantablack);">GENERATE & BREED</h3>
+                <p>Tokens initialized with specific genome (name, logo, narrative, tokenomics) and subjected to evolutionary computation across 50+ generational cycles.</p>
+                <div class="bar-chart">
+                    <div class="bar" style="height: 20%"></div>
+                    <div class="bar" style="height: 40%"></div>
+                    <div class="bar" style="height: 60%"></div>
+                    <div class="bar" style="height: 80%"></div>
+                    <div class="bar" style="height: 100%"></div>
+                </div>
+            </div>
+            <div class="stat-box" style="padding: 3rem; --infrared: var(--aave-purple);">
+                <h3 class="mono" style="font-size: 1.2rem; color: var(--vantablack);">SIMULATE & EVALUATE</h3>
+                <p>Genomes deployed into an off-chain continuous double auction to survive the economic pressure of 15,000+ AI behavioral agents.</p>
+                <div class="progress-container"><div class="progress-bar" style="width: 85%; background: var(--aave-purple);"></div></div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">03 // 09</div>
+</section>
+
+<!-- SLIDE 4: SYNTHETIC SWARM -->
+<section class="slide" id="slide4">
+    <div class="system-status"><div class="dot"></div> ENGINE I // SWARM TAXONOMY</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>THE SYNTHETIC SWARM</h2>
+        <p>15,000+ distinct AI agents interacting via a central exchange at nanosecond-resolution, mimicking real human market behavior.</p>
+
+        <div class="grid grid-3 vault">
+            <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+            
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.2);">
+                <div class="stat-label">MOMENTUM TRADERS [FOMO]</div>
+                <div class="stat-value" style="font-size: 2rem;">91%</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">Trend followers. High turnover.</p>
+            </div>
+            
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.2);">
+                <div class="stat-label">DIAMOND HANDS [HODL]</div>
+                <div class="stat-value" style="font-size: 2rem; color: var(--success-gold);">88%</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">Long-term holders. High loss aversion.</p>
+            </div>
+
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.2);">
+                <div class="stat-label">HERD FOLLOWERS [CROWD]</div>
+                <div class="stat-value" style="font-size: 2rem;">76%</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">Social proof dependent. Late adopters.</p>
+            </div>
+
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.2);">
+                <div class="stat-label">WHALES [SIZE]</div>
+                <div class="stat-value" style="font-size: 2rem;">82%</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">Large positions. Strategic accumulation.</p>
+            </div>
+
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.2);">
+                <div class="stat-label">SPECULATORS [DEGEN]</div>
+                <div class="stat-value" style="font-size: 2rem; color: var(--infrared);">94%</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">High-risk appetite. Narrative-driven.</p>
+            </div>
+
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.2);">
+                <div class="stat-label">INFLUENCERS [SHILL]</div>
+                <div class="stat-value" style="font-size: 2rem;">79%</div>
+                <p style="font-size: 0.9rem; margin-bottom: 0;">Narrative amplifiers. Social signals.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">04 // 09</div>
+</section>
+
+<!-- SLIDE 5: DUAL ENGINE -->
+<section class="slide" id="slide5">
+    <div class="system-status"><div class="dot"></div> ENGINE II // DUAL-ENGINE EVOLUTION</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>DUAL-ENGINE CO-EVOLUTION</h2>
+        <p>Resolving discrete vs. continuous data conflicts with parallel evolutionary engines.</p>
+
+        <div class="grid grid-2" style="margin-top: 3rem;">
+            <div class="vault" style="border-left: 4px solid var(--infrared);">
+                <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+                <h3 class="mono text-infrared" style="font-size: 1.2rem;">ENGINE A // CMA-ES</h3>
+                <div class="mono" style="margin-bottom: 1rem;">ECONOMIC OPTIMIZATION</div>
+                <p style="font-size: 1rem;"><strong>Domain:</strong> Continuous numeric genomes (fees, supply, curve params).</p>
+                <p style="font-size: 1rem;"><strong>Advantage:</strong> Margin correction prevents premature economic convergence.</p>
+            </div>
+
+            <div class="vault" style="border-left: 4px solid var(--aave-purple);">
+                <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+                <h3 class="mono text-aave" style="font-size: 1.2rem;">ENGINE B // GEMMA 4</h3>
+                <div class="mono" style="margin-bottom: 1rem;">CULTURAL EVOLUTION</div>
+                <p style="font-size: 1rem;"><strong>Domain:</strong> Discrete semantic genomes (name, logo, narrative).</p>
+                <p style="font-size: 1rem;"><strong>Advantage:</strong> Slerp interpolation preserves latent manifold geometry, preventing blurry averages.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; font-family: var(--font-mono); color: var(--graphite);">
+            OUTCOME // <span style="color: var(--vantablack); font-weight: bold;">SLERP CROSSOVER</span>
+        </div>
+    </div>
+    <div class="slide-number">05 // 09</div>
+</section>
+
+<!-- SLIDE 6: FITNESS FUNCTION -->
+<section class="slide" id="slide6">
+    <div class="system-status"><div class="dot"></div> METRIC // HYBRID FITNESS SCORE</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>MULTI-SIGNAL FITNESS</h2>
+        <p>Weighted market signals prevent agents from gaming any single metric.</p>
+
+        <div class="vault" style="margin-top: 3rem; text-align: center; padding: 3rem;">
+            <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+            <div class="mono" style="color: var(--infrared); font-size: 1.5rem; margin-bottom: 1rem;">FITNESS FUNCTION LOGIC</div>
+            <div style="font-family: var(--font-mono); font-size: 1.5rem; color: var(--vantablack);">
+                F(t) = 0.35(ΔHld) + 0.25(Vel) + 0.20(Vol) + 0.12(Liq) + 0.08(Soc)
+            </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top: 2rem;">
+            <div class="stat-box">
+                <div class="stat-label">HOLDER GROWTH (35%)</div>
+                <div class="progress-container"><div class="progress-bar" style="width: 100%;"></div></div>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">Organic distribution signals real traction.</p>
+            </div>
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.4);">
+                <div class="stat-label">TEMPORAL DYNAMICS (25%)</div>
+                <div class="progress-container"><div class="progress-bar" style="width: 71%; background: rgba(255,255,255,0.4);"></div></div>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">Engagement velocity during initial trading window.</p>
+            </div>
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.4);">
+                <div class="stat-label">TRADING VOLUME (20%)</div>
+                <div class="progress-container"><div class="progress-bar" style="width: 57%; background: rgba(255,255,255,0.4);"></div></div>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">Sustained economic interest.</p>
+            </div>
+            <div class="stat-box" style="--infrared: rgba(255,255,255,0.4);">
+                <div class="stat-label">LIQUIDITY & SOCIAL (20%)</div>
+                <div class="progress-container"><div class="progress-bar" style="width: 57%; background: rgba(255,255,255,0.4);"></div></div>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 0;">Market depth and narrative amplification.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">06 // 09</div>
+</section>
+
+<!-- SLIDE 7: GRADUATION -->
+<section class="slide" id="slide7">
+    <div class="system-status"><div class="dot"></div> BENCHMARK // GRADUATION CRITERIA</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>GRADUATION THRESHOLDS</h2>
+        <p>Rigorous mathematical outperformance against historical asset benchmarks.</p>
+
+        <div class="grid grid-2" style="margin-top: 3rem;">
+            <div class="vault">
+                <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+                <div class="stat-value" style="color: var(--success-gold);">+15%</div>
+                <h3 class="mono">FITNESS MARGIN REQUIRED</h3>
+                <p style="font-size: 1rem;">Tokens must out-perform the simulated genesis-phase trajectory of benchmark assets (e.g., PEPE, DOGE) across all 5 vectors simultaneously.</p>
+            </div>
+            
+            <div class="vault">
+                <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+                <div class="stat-value" style="color: var(--vantablack);">COHESION</div>
+                <h3 class="mono">ECONOMIC COHESION CHECK</h3>
+                <p style="font-size: 1rem;">High cultural resonance must correlate with stable liquidity depth. If viral but mathematically fragile: crossover is forced rather than deployed.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">07 // 09</div>
+</section>
+
+<!-- SLIDE 8: SAFETY ORACLE -->
+<section class="slide" id="slide8">
+    <div class="system-status"><div class="dot" style="background: var(--success-gold);"></div> GATEWAY // THE SAFETY ORACLE</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>MANUAL GATE</h2>
+        <p>A human-in-the-loop validation layer prior to mainnet deployment.</p>
+
+        <div class="grid grid-3" style="margin-top: 3rem;">
+            <div class="stat-box" style="--infrared: var(--success-gold);">
+                <h3 class="mono">ANTI-SPAM</h3>
+                <p style="font-size: 1rem; margin-bottom: 0;">Prevents automated pollution of BNB Chain with near-miss variations.</p>
+            </div>
+            <div class="stat-box" style="--infrared: var(--success-gold);">
+                <h3 class="mono">INTERRUPTION</h3>
+                <p style="font-size: 1rem; margin-bottom: 0;">Winning token surfaced on real-time dashboard. Human approval triggers smart contract.</p>
+            </div>
+            <div class="stat-box" style="--infrared: var(--success-gold);">
+                <h3 class="mono">REJECTION LOOP</h3>
+                <p style="font-size: 1rem; margin-bottom: 0;">Rejected genomes flagged as false-positives and fed back into the Swarm for mutation.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-number">08 // 09</div>
+</section>
+
+<!-- SLIDE 9: POST-GRADUATION (Previously slide 9, slide 10 removed) -->
+<section class="slide" id="slide9">
+    <div class="system-status"><div class="dot"></div> EXECUTION // MAINNET PIPELINE</div>
+    <div style="max-width: 1200px; width: 100%;">
+        <h2>INFRASTRUCTURE</h2>
+        <p>Robust, hardware-anchored technical stack executing on the BNB Chain.</p>
+
+        <div class="grid grid-2" style="margin-top: 3rem;">
+            <div class="vault">
+                <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+                <h3 class="mono text-infrared">01 // DEPLOYMENT & IDENTITY</h3>
+                <div style="margin-top: 1rem;">
+                    <div class="mono" style="color: var(--vantablack); margin-bottom: 0.5rem;">FOUR.MEME SDK</div>
+                    <p style="font-size: 0.9rem; margin-top: 0;">Handles auth and token contract deployment.</p>
+                    
+                    <div class="mono" style="color: var(--vantablack); margin-bottom: 0.5rem; margin-top: 1.5rem;">ERC-8004</div>
+                    <p style="font-size: 0.9rem; margin-top: 0;">Mints identity NFT for on-chain verifiable agent ownership.</p>
+                </div>
+            </div>
+
+            <div class="vault" style="border-color: rgba(186, 85, 211, 0.3);">
+                <div class="crosshair-bl"></div><div class="crosshair-br"></div>
+                <h3 class="mono text-aave">02 // SECURITY & LIQUIDITY</h3>
+                <div style="margin-top: 1rem;">
+                    <div class="mono" style="color: var(--vantablack); margin-bottom: 0.5rem;">PIEVERSE TEE</div>
+                    <p style="font-size: 0.9rem; margin-top: 0;">Secure agent wallets utilizing gasless txns. Private keys never leave enclave.</p>
+                    
+                    <div class="mono" style="color: var(--vantablack); margin-bottom: 0.5rem; margin-top: 1.5rem;">MYX FINANCE V2</div>
+                    <p style="font-size: 0.9rem; margin-top: 0;">Automatic post-launch perpetual market creation at $20k TVL.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 4rem;">
+            <span class="mono" style="color: var(--infrared); border: 1px solid var(--infrared); padding: 0.5rem 1rem;">READY FOR MAINNET GENESIS.</span>
+        </div>
+    </div>
+    <div class="slide-number">09 // 09</div>
+</section>
+
+</body>
+</html>
